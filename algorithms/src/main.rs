@@ -9,6 +9,7 @@ fn main() {
 }
 
 
+/// 冒泡排序
 fn sort(v: &mut Vec<i32>) {
 
     for i in 0..v.len() {
@@ -24,6 +25,7 @@ fn sort(v: &mut Vec<i32>) {
     println!("{}", v.len());
 }
 
+/// 1的个数
 fn hamming_weight (n: u32) -> i32 {
     let mut ans = 0;
     let mut n = n;
@@ -34,6 +36,7 @@ fn hamming_weight (n: u32) -> i32 {
     ans
 }
 
+/// 数据类型
 fn data_type() {
     let _ch: char = '₮';
     let str = "hello";
@@ -47,7 +50,7 @@ fn data_type() {
    // println!("{}", big_str);//borrowed value is forever?
 }
 
-
+/// 有序数组去重
 fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
     if nums.len() < 2 {
         nums.len() as i32
