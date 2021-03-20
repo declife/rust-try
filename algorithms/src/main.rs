@@ -65,3 +65,15 @@ fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
         count as i32
     }
 }
+
+/// 删除重复元素
+fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
+    let mut count = 0;
+    for i in 0..nums.len() {
+        if nums[i] != val {
+            nums[count] = nums[i];
+            count += 1;
+        }
+    }
+    count as i32
+}
