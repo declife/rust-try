@@ -1,11 +1,14 @@
 fn main() {
+    for i in 0..-1 {
+        println!("{}", i);
+    }
+    let n = str_str(String::from("refgll"), String::from("llaaaaaaa"));
     data_type();
     let mut v = vec![0, 1, 1, 1, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8];
     remove_duplicates(&mut v);
     sort(&mut v);
     println!("Hello, world!");
 }
-
 
 /// 冒泡排序
 fn sort(v: &mut Vec<i32>) {
@@ -63,19 +66,20 @@ fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
     }
 }
 
+/// 合并两有序数组
 fn merge(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
     if n == 0 {
         return;
     }
-
+    let m: usize = m as usize;
+    let n: usize = n as usize;
     for i in 0..nums2.len() {
         nums1[m + i] = nums2[i];
     }
     if m == 0 {
         return;
     }
-    let m: usize = m as usize;
-    let n: usize = n as usize;
+
     for i in m..m + n {
         for j in (1..i + 1).rev() {
             if nums1[j] < nums1[j - 1] {
@@ -88,7 +92,6 @@ fn merge(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
         }
     }
 }
-
 fn merge_by_ans(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
     // 转为i32, 避免0_usize - 1溢出
     let mut i = m - 1;
@@ -105,4 +108,40 @@ fn merge_by_ans(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
         }
         k -= 1;
     }
+}
+
+///查找needle在haystack中的起始位置
+fn str_str_by_api(haystack: String, needle: String) -> i32 {
+    match haystack.find(&needle) {
+        Some(index) => index as i32,
+        None => -1
+    }
+}
+fn str_str(haystack: String, needle: String) -> i32 {
+    println!("{}", haystack);
+    println!("{}", needle);
+    if needle.is_empty() || haystack.len() < needle.len() {
+        0
+    } else {
+        for index in 0..haystack.len() - needle.len() + 1 {
+            println!("{}", index);
+            if equal(&haystack[index..index + needle.len()], &needle) {
+                return index as i32;
+            }
+        }
+        -1
+    }
+}
+fn equal(ichi: &str, ni: &str) -> bool {
+    if ichi.len() != ni.len() {
+        false
+    } else {
+        for ich in 0..ichi.len() {
+            if ichi.as_bytes()[ich]!= ni.as_bytes()[ich] {
+                return false;
+            }
+        }
+        true
+    }
+
 }
