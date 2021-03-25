@@ -1,7 +1,5 @@
 fn main() {
-    for i in 0..-1 {
-        println!("{}", i);
-    }
+    let index =  search_insert(vec!(1,4,5), 3);
     let n = str_str(String::from("refgll"), String::from("llaaaaaaa"));
     data_type();
     let mut v = vec![0, 1, 1, 1, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8];
@@ -144,4 +142,47 @@ fn equal(ichi: &str, ni: &str) -> bool {
         true
     }
 
+}
+
+/// 查找插入位置
+fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+    let mut left :usize = 0;
+    let mut right = nums.len() - 1;
+    if nums[right] < target {
+        return (right + 1) as i32;
+    }
+    while left < right {
+        let mid = right - (right - left) / 2;
+        if nums[mid] == target {
+            return mid as i32;
+        }
+        if nums[mid] > target {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    if nums[left] >= target {
+        left as i32
+    } else {
+        (left + 1) as i32
+    }
+}
+fn search_insert_simplify(nums: Vec<i32>, target: i32) -> i32 {
+    let mut left :usize = 0;
+    let mut right = nums.len() - 1;
+    let mut ans = nums.len();
+
+    while left <= right {
+        let mid = (right - left) >> 1 + left;
+        if nums[mid] == target {
+            return mid as i32
+        } else if nums[mid] > target {
+            ans = mid;
+            right = mid - 1;
+        } else {
+           left = mid + 1;
+        }
+    }
+    ans as i32
 }
