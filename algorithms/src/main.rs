@@ -1,4 +1,5 @@
 fn main() {
+    count_and_say(6);
     let index =  search_insert(vec!(1,4,5), 3);
     let n = str_str(String::from("refgll"), String::from("llaaaaaaa"));
     data_type();
@@ -185,4 +186,40 @@ fn search_insert_simplify(nums: Vec<i32>, target: i32) -> i32 {
         }
     }
     ans as i32
+}
+
+/// 第n个外观数列
+fn count_and_say(n: i32) -> String {
+    if n <= 0 {
+        String::from("0")
+    } else if n == 1 {
+        String::from("1")
+    } else {
+        let mut ans = String::from("1");
+        for i in 1..n {
+            let mut tmp = String::new();
+            let mut pre = ans[0 as usize];
+            let mut count = 1;
+            for ch in 1..ans.len() {
+                if ans[ch] != pre {
+                    tmp.push(match char::from_digit(count as u32, 10) {
+                        Some(value) => value,
+                        None => String::new()
+                    });
+                    tmp.push(ans[ch]);
+                    count = 1;
+                    pre = ans[ch];
+                } else {
+                    count += 1;
+                }
+            }
+            tmp.push(match char::from_digit(count as u32, 10) {
+                Some(value) => value,
+                None => String::new()
+            });
+            tmp.push(ans[ans.len() - 1]);
+            ans = tmp;
+        }
+        ans
+    }
 }
