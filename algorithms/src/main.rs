@@ -1,5 +1,9 @@
 fn main() {
-    count_and_say(6);
+    count_and_say(9);
+    let arr = vec![1,2,3,4,5,7];
+    let ele = arr[1];
+    assert_eq!(ele, arr[1]);
+    println!("{} = {}", arr[1], ele);
     let index =  search_insert(vec!(1,4,5), 3);
     let n = str_str(String::from("refgll"), String::from("llaaaaaaa"));
     data_type();
@@ -190,7 +194,7 @@ fn search_insert_simplify(nums: Vec<i32>, target: i32) -> i32 {
 
 /// 第n个外观数列
 fn count_and_say(n: i32) -> String {
-    if n <= 0 {
+   if n <= 0 {
         String::from("0")
     } else if n == 1 {
         String::from("1")
@@ -198,26 +202,20 @@ fn count_and_say(n: i32) -> String {
         let mut ans = String::from("1");
         for i in 1..n {
             let mut tmp = String::new();
-            let mut pre = ans[0 as usize];
+            let mut pre = ans.as_bytes()[0];
             let mut count = 1;
             for ch in 1..ans.len() {
-                if ans[ch] != pre {
-                    tmp.push(match char::from_digit(count as u32, 10) {
-                        Some(value) => value,
-                        None => String::new()
-                    });
-                    tmp.push(ans[ch]);
+                if ans.as_bytes()[ch] != pre {
+                    tmp.push(std::char::from_digit(count as u32, 10).unwrap());
+                    tmp.push(pre as char);
                     count = 1;
-                    pre = ans[ch];
+                    pre = ans.as_bytes()[ch];
                 } else {
                     count += 1;
                 }
             }
-            tmp.push(match char::from_digit(count as u32, 10) {
-                Some(value) => value,
-                None => String::new()
-            });
-            tmp.push(ans[ans.len() - 1]);
+            tmp.push(std::char::from_digit(count as u32, 10).unwrap());
+            tmp.push(pre as char);
             ans = tmp;
         }
         ans
