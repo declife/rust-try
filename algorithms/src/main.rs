@@ -1,22 +1,12 @@
+mod collection;
+
 fn main() {
-    count_and_say(9);
-    let arr = vec![1,2,3,4,5,7];
-    let ele = arr[1];
-    assert_eq!(ele, arr[1]);
-    println!("{} = {}", arr[1], ele);
-    let index =  search_insert(vec!(1,4,5), 3);
-    let n = str_str(String::from("refgll"), String::from("llaaaaaaa"));
-    data_type();
-    let mut v = vec![0, 1, 1, 1, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8];
-    remove_duplicates(&mut v);
-    sort(&mut v);
-    println!("Hello, world!");
+   collection::string_dis();
 }
 
 /// 冒泡排序
 fn sort(v: &mut Vec<i32>) {
     for i in 0..v.len() {
-        let m = i + 1;
         for j in 0..v.len() - i - 1 {
             if v[j] > v[j + 1] {
                 let tmp = v[j];
@@ -42,7 +32,6 @@ fn hamming_weight(n: u32) -> i32 {
 /// 数据类型
 fn data_type() {
     let _ch: char = '₮';
-    let str = "hello";
 
     let big_str = String::from("world");
     if true {
@@ -200,7 +189,7 @@ fn count_and_say(n: i32) -> String {
         String::from("1")
     } else {
         let mut ans = String::from("1");
-        for i in 1..n {
+        for _i in 1..n {
             let mut tmp = String::new();
             let mut pre = ans.as_bytes()[0];
             let mut count = 1;
