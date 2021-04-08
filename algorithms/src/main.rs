@@ -1,7 +1,13 @@
+use crate::collection::plus_one;
+
 mod collection;
 
+
 fn main() {
-   collection::string_dis();
+    let plo0 = collection::plus_one(vec![1,0,0]);
+    let plo1 = plus_one(vec![9,9,9]);
+    collection::string_dis();
+    collection::map_foo();
 }
 
 /// 冒泡排序
