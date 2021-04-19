@@ -1,13 +1,52 @@
 use crate::collection::plus_one;
+use std::option::Option::Some;
+use std::io::ErrorKind;
+use std::io;
+use std::fs::File;
+use std::net::IpAddr;
 
 mod collection;
 
 
-fn main() {
-    let plo0 = collection::plus_one(vec![1,0,0]);
-    let plo1 = plus_one(vec![9,9,9]);
-    collection::string_dis();
-    collection::map_foo();
+fn main(){
+    // let home = "127.0.0.1".parse();
+    // let home: IpAddr = home.unwrap();
+    // collection::plus_one(vec![1,0,0]);
+    // plus_one(vec![9,9,9]);
+    // collection::string_dis();
+    // collection::map_foo();
+    // let value = Some(5);
+    // if let Some(b) = value {
+    //     println!("{}", "PPP");
+    // }
+    // match value {
+    //     Some(value) => println!("{}", "Right"),
+    //     None => println!("{}", "False")
+    // }
+    // let f = File::open("hello.txt");
+    //
+    // let f = match f {
+    //     Ok(file) => file,
+    //     Err(error) => match error.kind() {
+    //         ErrorKind::NotFound => match File::create("hello.txt") {
+    //             Ok(fc) => fc,
+    //             Err(e) => panic!("Problem creating the file: {:?}", e),
+    //         },
+    //         other_error => {
+    //             panic!("Problem opening the file: {:?}", other_error)
+    //         }
+    //     },
+    // };
+    let foo = Some(String::new());
+    let bar = Some(12);
+    generic_type(&foo);
+    generic_type(&bar);
+
+}
+
+
+fn generic_type<T>(_: &T) {
+    println!("{}", std::any::type_name::<T>())
 }
 
 /// 冒泡排序
@@ -36,14 +75,15 @@ fn hamming_weight(n: u32) -> i32 {
 }
 
 /// 数据类型
+#[test]
 fn data_type() {
     let _ch: char = '₮';
 
     let big_str = String::from("world");
     if true {
-        let mut big_str_copy = big_str;
-        big_str_copy.push_str(", copy");
-        //println!("{}", big_str);
+        // let mut big_str_copy = big_str;
+        // big_str_copy.push_str(", copy");
+        println!("{}", big_str);
     }
     // println!("{}", big_str);//borrowed value is forever?
 }
