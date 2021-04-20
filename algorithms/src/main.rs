@@ -256,3 +256,52 @@ fn count_and_say(n: i32) -> String {
         ans
     }
 }
+
+
+/// 写过的
+#[test]
+fn remove_element() {
+    let mut nums = vec![4, 5, 6, 10, 12, 90, 12];
+    let val = 12;
+    let mut count = 0;
+    for value in 0..nums.len() {
+       if val != nums[value] {
+           nums[count] = nums[value];
+           count += 1;
+       }
+    }
+    // count as i32
+    println!("{}", count)
+}
+
+/// 最后一个单词的长度
+#[test]
+fn length_of_last_word() {
+    let mut s = String::from("k     ");
+
+    // s.trim_end();
+    let mut last_index = s.len();
+    for char in s.chars().rev() {
+        if char == ' ' {
+            last_index -= 1;
+        } else {
+            break;
+        }
+    }
+
+    let str = &s[..last_index];
+    if str.len() == 0 {
+        println!("{}", 0);
+        // 0
+    } else {
+        let mut count = 0;
+        for char in str.chars().rev() {
+            if char == ' ' {
+                break;
+            }
+            count += 1;
+        }
+        println!("{}", count);
+        // count
+    }
+}
