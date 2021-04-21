@@ -29,15 +29,15 @@ mod tests {
     fn add_binary_op(a: String, b: String) -> String {
         let mut carry = 0;
         let mut ans = Vec::new();
-        let alen = a.len();
-        let blen = b.len();
+        // let a_vec.len() = a.len();
+        // let b_vec.len() = b.len();
         let a_vec = a.into_bytes();
         let b_vec = b.into_bytes();
-        let (prefix, a_suffix, b_suffix) = if alen > blen {
-            let len = alen - blen;
+        let (prefix, a_suffix, b_suffix) = if a_vec.len() > b_vec.len() {
+            let len = a_vec.len() - b_vec.len();
             (&a_vec[..len], &a_vec[len..], &b_vec[..])
         } else {
-            let len = blen - alen;
+            let len = b_vec.len() - a_vec.len();
             (&b_vec[..len], &a_vec[..], &b_vec[len..])
         };
         for index in (0..a_suffix.len()).rev() {
