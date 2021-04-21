@@ -26,6 +26,7 @@ mod tests {
         format!("{:b}", u32::from_str_radix(&a, 2).unwrap() + u32::from_str_radix(&b, 2).unwrap())
     }
 
+    /// 优化版本
     fn add_binary_op(a: String, b: String) -> String {
         let mut carry = 0;
         let mut ans = Vec::new();
@@ -73,4 +74,67 @@ mod tests {
             '0'
         }
     }
+
+    /// 平方根
+    #[test]
+    fn my_sqrt_test() {
+        assert_eq!(my_sqrt(2147483647), 46340)
+    }
+
+    fn my_sqrt(x: i32) -> i32 {
+        if x < 0 {
+            -1
+        } else {
+            let mut l = 0;
+            let mut r = 46340;
+
+            while l < r {
+                let mid = (r - l) / 2 + l;
+                let mid_sqr = mid * mid;
+                if mid_sqr == x {
+                    return mid;
+                }
+                if mid_sqr < x {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            if l * l > x {
+                l - 1
+            } else {
+                l
+            }
+            // for i in 0..=x {
+            //     if  i * i == x {
+            //         return i;
+            //     } else if i * i > x {
+            //         return i - 1;
+            //     }
+            // }
+            // -1
+        }
+    }
+
+    /// 牛顿迭代: xi = 0.5(x0+c/x0)...
+    pub fn my_sqrt(x: i32) -> i32 {
+        if x == 0{
+            return 0i32;
+        }
+
+        let c = x as f64;
+        let mut  x0 = c;
+        loop{
+            let xi = 0.5 * (x0 + c/x0);
+            if (x0 - xi) < 1e-7{
+                break;
+            }
+            x0 = xi;
+        }
+
+        x0 as i32
+    }
+
+
+
 }
