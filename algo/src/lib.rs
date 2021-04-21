@@ -48,10 +48,10 @@ mod tests {
         }
         for index in (0..prefix.len()).rev() {
             if carry == 0 {
-                for ch in prefix[..=index].iter().rev() {
-                    ans.push(zero_or_one(*ch as u32 - 48));
-                }
-                // prefix[..=index].iter().rev().map(|ch| ans.push(zero_or_one(*ch as u32 - 48))); //看看这个是啥
+                // for ch in prefix[..=index].iter().rev() {
+                //     ans.push(zero_or_one(*ch as u32 - 48));
+                // }
+                prefix[..=index].iter().rev().for_each(|ch| ans.push(zero_or_one(*ch as u32 - 48))); //看看这个是啥
                 // ans = ans + prefix[..=index].iter().rev().collect::<String>();
                 // ans = format!("{}{}", &ans, prefix[..=index].iter().rev().collect::<String>());
                 break;
