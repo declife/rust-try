@@ -41,12 +41,14 @@ mod tests {
             let len = b_vec.len() - a_vec.len();
             (&b_vec[..len], &a_vec[..], &b_vec[len..])
         };
+
         for index in (0..a_suffix.len()).rev() {
             let cur = a_suffix[index] as u32 - 48 + b_suffix[index] as u32 - 48 + carry;
             carry = cur >> 1;
             let out = char::from_digit(cur & 1, 2).unwrap();
             ans.push(zero_or_one(cur & 1));
         }
+
         for index in (0..prefix.len()).rev() {
             if carry == 0 {
                 // for ch in prefix[..=index].iter().rev() {
@@ -61,6 +63,7 @@ mod tests {
             carry = cur >> 1;
             ans.push(zero_or_one(cur & 1));
         }
+
         if carry == 1 {
             ans.push('1');
         }
@@ -76,6 +79,7 @@ mod tests {
     }
 
     /// 平方根
+    /// 测试
     #[test]
     fn my_sqrt_test() {
         assert_eq!(my_sqrt(2147483647), 46340)
@@ -117,7 +121,7 @@ mod tests {
     }
 
     /// 牛顿迭代: xi = 0.5(x0+c/x0)...
-    pub fn my_sqrt(x: i32) -> i32 {
+    pub fn my_sqrt_op(x: i32) -> i32 {
         if x == 0{
             return 0i32;
         }
@@ -135,6 +139,59 @@ mod tests {
         x0 as i32
     }
 
+    #[test]
+    fn climb_stairs_test() {
+        climb_stairs(2);
+        assert_eq!(2, climb_stairs(2));
+        assert_eq!(3, climb_stairs(3));
+        assert_eq!(3, climb_stairs_op(3));
+    }
 
+    fn climb_stairs(n: i32) -> i32 {
+        if n < 0 {
+            0
+        } else if n == 1 {
+            1
+        } else if n == 2 {
+            2
+        } else {
+            climb_stairs(n - 1) + climb_stairs(n - 2)
+        }
+    }
 
+    ///快速幂矩阵
+    fn climb_stairs_op(n: i32) -> i32 {
+        if n < 0 {
+            0
+        } else if n == 1 {
+            1
+        } else {
+            let a = vec![vec![1, 1], vec![1, 0]];
+            let _final = pow(a, n);
+            _final[0]
+        }
+    }
+
+    fn pow(mut v: Vec<Vec<i32>>, mut n: i32) -> Vec<i32> {
+        let mut ans = vec![vec![1, 0],vec![0, 1]];
+        while n > 0 {
+            if n & 1 != 0 {
+                ans = multiply(&ans, &v);
+            }
+            v = multiply(&v, &v);
+            n >>= 1;
+        }
+        // ans = multiply(&ans, &v);
+        vec![ans[0][0], ans[0][1]]
+    }
+
+    fn multiply(v: &Vec<Vec<i32>>, s: &Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let mut re = vec![vec![0; 2], vec![0; 2]];
+        for i in 0..2 {
+            for j in 0..2 {
+                re[i][j] = v[i][0] * s[0][j] + v[i][1] * s[1][j];
+            }
+        }
+        re
+    }
 }
