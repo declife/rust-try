@@ -2,6 +2,8 @@
 mod tests {
 
     use std::char;
+    use core::option;
+    use std::borrow::BorrowMut;
 
 
     #[test]
@@ -193,5 +195,106 @@ mod tests {
             }
         }
         re
+    }
+
+
+
+    /// Definition for singly-linked list.
+    #[derive(PartialEq, Eq, Clone, Debug)]
+    pub struct ListNode {
+      pub val: i32,
+      pub next: Option<Box<ListNode>>
+    }
+
+    impl ListNode {
+      #[inline]
+      fn new(val: i32) -> Self {
+        ListNode {
+          next: None,
+          val
+        }
+      }
+    }
+
+    // fn delete_duplicates_test(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    //     if head.is_none() {
+    //         return head;
+    //     }
+    //     let mut head = head;
+    //     let mut ans = Some(Box::new(ListNode::new(head.as_ref().unwrap().val)));
+    //
+    //     let mut cur = &head.as_ref().unwrap().next;
+    //     let mut real_cur = &mut ans;
+    //     loop {
+    //         let cur_val = match cur {
+    //             Some(val) => val,
+    //             None => break
+    //         };
+    //
+    //
+    //
+    //         if real_cur.as_ref().unwrap().val != cur_val.val {
+    //             let next = Some(Box::new(ListNode::new(cur_val.val)));
+    //             match real_cur {
+    //                 None => break,
+    //                 Some(ref mut rc) => rc.next = next
+    //             }
+    //             real_cur = if let Some(rc) = real_cur {
+    //                 rc.next
+    //             };
+    //             // real_cur = Some(Box::new(ListNode::new(cur_val.val)));
+    //             // real_cur = &mut real_cur.as_ref().unwrap().borrow_mut().next;
+    //         }
+    //         cur = &cur.as_ref().unwrap().next;
+    //     }
+    //     ans
+    // }
+
+    fn delete_duplicates(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        if head.is_none() {
+            return head;
+        }
+        let mut head = head;
+        let mut ans = Some(Box::new(ListNode::new(head.as_ref().unwrap().val)));
+
+        let mut cur = &head.as_ref().unwrap().next;
+        let mut real_cur = ans.get_or_insert(Box::new(ListNode::new(0)));
+        loop {
+            let cur_val = match cur {
+                Some(val) => val,
+                None => break
+            };
+
+
+
+            if real_cur.val != cur_val.val {
+                // let next = Some(Box::new(ListNode::new(cur_val.val)));
+                real_cur = real_cur.next.get_or_insert(Box::new(ListNode::new(cur_val.val)));
+                // real_cur = &mut match real_cur {
+                //     None => None,
+                //     Some(rc) => rc.next
+                // }
+                // real_cur = Some(Box::new(ListNode::new(cur_val.val)));
+                // real_cur = &mut real_cur.as_ref().unwrap().borrow_mut().next;
+            }
+            cur = &cur.as_ref().unwrap().next;
+        }
+        ans
+    }
+
+    fn delete_duplicates_op(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut res = ListNode {val: 0, next: head }; // head不可变，但是包一层就可变了
+
+        let mut p = &mut res.next;
+        while let Some(node) = p {
+            while node.next.is_some()
+                && node.val == node.next.as_ref().unwrap().val {
+                let next = node.next.take();
+                node.next = next.unwrap().next.take();
+            }
+            p = &mut node.next;
+        }
+
+        res.next.take()
     }
 }
