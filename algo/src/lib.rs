@@ -5,6 +5,8 @@ mod tests {
     use core::option;
     use std::cell::RefCell;
     use std::rc::Rc;
+    use std::option::Option::Some;
+
 
 
     #[test]
@@ -364,5 +366,58 @@ mod tests {
         i32::max(1 + max_depth(root.as_ref().unwrap().borrow().left.clone()), 1 + max_depth(root.as_ref().unwrap().borrow().right.clone()))
     }
 
-    ///
+    /// 中序遍历 递归
+    fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut inorder: Vec<i32> = Vec::new();
+        deal_value(&mut inorder, &root);
+        fn deal_value(inorder: &mut Vec<i32>, node: &Option<Rc<RefCell<TreeNode>>>) {
+            match node {
+                None => (),
+                Some(v) => {
+                    deal_value(inorder, &v.borrow().left);
+                    inorder.push(v.borrow().val);
+                    deal_value(inorder, &v.borrow().right);
+                }
+            }
+
+        }
+        inorder
+    }
+
+    fn inorder_traversal_op(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut inorder_stack: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![];
+        let mut inorder: Vec<i32> = vec![];
+
+        // let init = TreeNode {
+        //     val: 0,
+        //     left: None,
+        //     right: root
+        // };
+        // let mut right: Rc<RefCell<TreeNode>> = Rc::new(RefCell::new(init));
+        let mut tmp = root.clone();
+        loop {
+
+            // let tmp = &(right.try_borrow().unwrap().right);
+            while tmp.is_some() {
+                inorder_stack.push(tmp.clone());
+                tmp = tmp.unwrap().borrow().left.clone();
+            }
+            match inorder_stack.pop() {
+                Some(node) => {
+                    inorder.push(node.as_ref().unwrap().borrow().val);
+                    tmp = node.as_ref().unwrap().borrow().right.clone();
+                    // let mut right = node.clone();
+                    // inorder.push(right.borrow().val);
+                    // inorder_stack.push(node.unwrap().borrow().right.clone());
+                },
+                None => break
+            }
+
+        }
+        inorder
+    }
+
+
+
+
 }

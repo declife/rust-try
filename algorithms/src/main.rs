@@ -37,6 +37,12 @@ fn main(){
     //         }
     //     },
     // };
+    let mut val = 1;
+    {
+        let mut val = 2;
+        print!("{}", val);
+    }
+    print!("{}", val);
     let foo = Some(String::new());
     let bar = Some(12);
     generic_type(&foo);
