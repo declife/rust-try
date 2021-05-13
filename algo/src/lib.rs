@@ -3,7 +3,8 @@ mod tests {
 
     use std::char;
     use core::option;
-    use std::borrow::BorrowMut;
+    use std::cell::RefCell;
+    use std::rc::Rc;
 
 
     #[test]
@@ -197,7 +198,7 @@ mod tests {
         re
     }
 
-
+///--------------------------------------------------------------------------------------------------///
 
     /// Definition for singly-linked list.
     #[derive(PartialEq, Eq, Clone, Debug)]
@@ -297,4 +298,71 @@ mod tests {
 
         res.next.take()
     }
+    ///---------------------------------------------------------------------------------------------///
+    /// 相同的树
+    ///
+    /// // Definition for a binary tree node.
+    #[derive(Debug, PartialEq, Eq)]
+    pub struct TreeNode {
+      pub val: i32,
+      pub left: Option<Rc<RefCell<TreeNode>>>,
+      pub right: Option<Rc<RefCell<TreeNode>>>,
+    }
+
+    impl TreeNode {
+      #[inline]
+      pub fn new(val: i32) -> Self {
+        TreeNode {
+          val,
+          left: None,
+          right: None
+        }
+      }
+    }
+
+    fn is_same_tree(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        fn is_same_tree_in(p: &Option<Rc<RefCell<TreeNode>>>, q: &Option<Rc<RefCell<TreeNode>>>) -> bool {
+            if p.is_none() && q.is_none() {
+                true
+            } else if p.is_none() || q.is_none() || p.as_ref().unwrap().borrow().val != q.as_ref().unwrap().borrow().val {
+                false
+            } else {
+                is_same_tree_in(&p.as_ref().unwrap().borrow().left.clone(), &q.as_ref().unwrap().borrow().left) &&
+                    is_same_tree_in(&p.as_ref().unwrap().borrow().right, &q.as_ref().unwrap().borrow().right)
+            }
+        }
+        is_same_tree_in(&p, &q)
+    }
+
+    fn is_same_tree_by_stack(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut vec_p = vec![p.clone()];
+        let mut vec_q = vec![q.clone()];
+
+        while !(vec_p.is_empty() && vec_q.is_empty()) {
+            let pp = vec_p.remove(0);
+            let qq = vec_q.remove(0);
+            if pp.is_none() && qq.is_none() {
+               continue;
+            } else if pp.is_none() || qq.is_none() || pp.as_ref().unwrap().borrow().val != qq.as_ref().unwrap().borrow().val {
+                return false;
+            }
+            vec_p.push(pp.as_ref().unwrap().borrow().left.clone());
+            vec_p.push(pp.as_ref().unwrap().borrow().right.clone());
+            vec_q.push(qq.as_ref().unwrap().borrow().left.clone());
+            vec_q.push(qq.as_ref().unwrap().borrow().right.clone());
+        }
+        true
+    }
+
+
+    /// 使用递归很好写,深度优先搜素,
+    /// 使用广度优先的话,就每循环队列存储同一行(高度)所有节点
+    fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        if root.is_none() {
+            return 0
+        }
+        i32::max(1 + max_depth(root.as_ref().unwrap().borrow().left.clone()), 1 + max_depth(root.as_ref().unwrap().borrow().right.clone()))
+    }
+
+    ///
 }
