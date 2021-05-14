@@ -322,6 +322,7 @@ mod tests {
       }
     }
 
+    #[test]
     fn is_same_tree(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
         fn is_same_tree_in(p: &Option<Rc<RefCell<TreeNode>>>, q: &Option<Rc<RefCell<TreeNode>>>) -> bool {
             if p.is_none() && q.is_none() {
@@ -336,6 +337,7 @@ mod tests {
         is_same_tree_in(&p, &q)
     }
 
+    #[test]
     fn is_same_tree_by_stack(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
         let mut vec_p = vec![p.clone()];
         let mut vec_q = vec![q.clone()];
@@ -359,6 +361,7 @@ mod tests {
 
     /// 使用递归很好写,深度优先搜素,
     /// 使用广度优先的话,就每循环队列存储同一行(高度)所有节点
+    #[test]
     fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         if root.is_none() {
             return 0
@@ -367,6 +370,7 @@ mod tests {
     }
 
     /// 中序遍历 递归
+    #[test]
     fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         let mut inorder: Vec<i32> = Vec::new();
         deal_value(&mut inorder, &root);
@@ -384,20 +388,21 @@ mod tests {
         inorder
     }
 
+    #[test]
     fn inorder_traversal_op(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         let mut inorder_stack: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![];
         let mut inorder: Vec<i32> = vec![];
 
-        // let init = TreeNode {
-        //     val: 0,
-        //     left: None,
-        //     right: root
-        // };
-        // let mut right: Rc<RefCell<TreeNode>> = Rc::new(RefCell::new(init));
+        let init = TreeNode {
+            val: 0,
+            left: None,
+            right: root.clone()
+        };
+        let mut right: Rc<RefCell<TreeNode>> = Rc::new(RefCell::new(init));
         let mut tmp = root.clone();
         loop {
 
-            // let tmp = &(right.try_borrow().unwrap().right);
+            let test = (right.as_ref().borrow().right.as_ref());
             while tmp.is_some() {
                 inorder_stack.push(tmp.clone());
                 tmp = tmp.unwrap().borrow().left.clone();
@@ -406,7 +411,7 @@ mod tests {
                 Some(node) => {
                     inorder.push(node.as_ref().unwrap().borrow().val);
                     tmp = node.as_ref().unwrap().borrow().right.clone();
-                    // let mut right = node.clone();
+                    right = node.as_ref().unwrap().clone();
                     // inorder.push(right.borrow().val);
                     // inorder_stack.push(node.unwrap().borrow().right.clone());
                 },
