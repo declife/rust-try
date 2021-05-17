@@ -392,16 +392,16 @@ mod tests {
         let mut inorder_stack: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![];
         let mut inorder: Vec<i32> = vec![];
 
-        let init = TreeNode {
-            val: 0,
-            left: None,
-            right: root.clone()
-        };
-        let mut right: Rc<RefCell<TreeNode>> = Rc::new(RefCell::new(init));
+        // let init = TreeNode {
+        //     val: 0,
+        //     left: None,
+        //     right: root.clone()
+        // };
+        // let mut right: Rc<RefCell<TreeNode>> = Rc::new(RefCell::new(init));
         let mut tmp = root.clone();
         loop {
 
-            let test = (right.as_ref().borrow().right.as_ref());
+            // let test = (right.as_ref().borrow().right.as_ref());
             while tmp.is_some() {
                 inorder_stack.push(tmp.clone());
                 tmp = tmp.unwrap().borrow().left.clone();
@@ -410,7 +410,7 @@ mod tests {
                 Some(node) => {
                     inorder.push(node.as_ref().unwrap().borrow().val);
                     tmp = node.as_ref().unwrap().borrow().right.clone();
-                    right = node.as_ref().unwrap().clone();
+                    // right = node.as_ref().unwrap().clone();
                     // inorder.push(right.borrow().val);
                     // inorder_stack.push(node.unwrap().borrow().right.clone());
                 },
