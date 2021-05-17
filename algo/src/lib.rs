@@ -8,7 +8,6 @@ mod tests {
     use std::option::Option::Some;
 
 
-
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
@@ -322,7 +321,7 @@ mod tests {
       }
     }
 
-    #[test]
+    // #[test]
     fn is_same_tree(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
         fn is_same_tree_in(p: &Option<Rc<RefCell<TreeNode>>>, q: &Option<Rc<RefCell<TreeNode>>>) -> bool {
             if p.is_none() && q.is_none() {
@@ -337,7 +336,7 @@ mod tests {
         is_same_tree_in(&p, &q)
     }
 
-    #[test]
+    // #[test]
     fn is_same_tree_by_stack(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
         let mut vec_p = vec![p.clone()];
         let mut vec_q = vec![q.clone()];
@@ -361,7 +360,7 @@ mod tests {
 
     /// 使用递归很好写,深度优先搜素,
     /// 使用广度优先的话,就每循环队列存储同一行(高度)所有节点
-    #[test]
+    // #[test]
     fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         if root.is_none() {
             return 0
@@ -370,7 +369,7 @@ mod tests {
     }
 
     /// 中序遍历 递归
-    #[test]
+    // #[test]
     fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         let mut inorder: Vec<i32> = Vec::new();
         deal_value(&mut inorder, &root);
@@ -388,7 +387,7 @@ mod tests {
         inorder
     }
 
-    #[test]
+    // #[test]
     fn inorder_traversal_op(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         let mut inorder_stack: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![];
         let mut inorder: Vec<i32> = vec![];
@@ -419,6 +418,82 @@ mod tests {
             }
 
         }
+        inorder
+    }
+
+    #[test]
+    fn test() {
+        let init  = TreeNode {
+            val: 1,
+            left: None,
+            right: None
+        };
+
+        let init = Some(Rc::new(RefCell::new(init)));
+
+        let left = TreeNode {
+            val: 0,
+            left: None,
+            right: init.clone()
+        };
+
+        let right = TreeNode {
+            val: 1,
+            left: None,
+            right: None
+        };
+        let right= Some(Rc::new(RefCell::new(right)));
+        let left = Some(Rc::new(RefCell::new(left)));
+
+
+        let root = TreeNode {
+            val: 2,
+            left: left.clone(),
+            right: right.clone()
+        };
+        println!("{}", Rc::strong_count(left.as_ref().unwrap().borrow().right.as_ref().unwrap()));
+        inorder_traversal_morris(Some(Rc::new(RefCell::new(root))));
+    }
+
+    fn inorder_traversal_morris(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut cur = root.clone();
+        let mut inorder = vec![];
+        while cur.is_some() {
+            if cur.as_ref().unwrap().borrow().left.is_none() {
+                inorder.push(cur.as_ref().unwrap().borrow().val);
+                cur = cur.clone().as_ref().unwrap().borrow().right.clone();
+            } else {
+                let mut most_right = cur.as_ref().unwrap().borrow().left.clone();
+                while most_right.as_ref().unwrap().borrow().right.is_some() {
+                    println!("{}", Rc::strong_count(most_right.as_ref().unwrap().borrow().right.as_ref().unwrap()));
+                    // most_right,其原父节点,以及cur三个节点的引用
+                    if Rc::strong_count(most_right.as_ref().unwrap().borrow().right.as_ref().unwrap()) > 2 {
+                        break;
+                    }
+
+
+                    most_right = most_right.clone().as_ref().unwrap().borrow().right.clone();
+                }
+                {
+                    let val = Rc::strong_count(cur.as_ref().unwrap());
+                    // println!("{}", val);
+                }
+                let tmp_most_right = most_right.clone().as_ref().unwrap().borrow().right.clone();
+
+                match tmp_most_right {
+                    Some(right) => {
+                        inorder.push(cur.as_ref().unwrap().borrow().val);
+                        most_right.clone().as_ref().unwrap().clone().borrow_mut().right = None;
+                        cur = cur.clone().as_ref().unwrap().borrow().right.clone();
+                    },
+                    None => {
+                        most_right.clone().as_ref().unwrap().clone().borrow_mut().right = cur.clone();
+                        cur = cur.clone().as_ref().unwrap().borrow().left.clone();
+                    }
+                }
+            }
+        }
+        print!("{:#?}", inorder);
         inorder
     }
 
