@@ -6,6 +6,7 @@ mod tests {
     use std::cell::RefCell;
     use std::rc::Rc;
     use std::option::Option::Some;
+    use std::ops::Add;
 
 
     #[test]
@@ -497,7 +498,78 @@ mod tests {
         inorder
     }
 
+    #[test]
+    fn int_to_roman_test() {
+        let roman = int_to_roman(58);
+        println!("{}", roman)
+    }
+
+    /// 写的太麻烦了
+    fn int_to_roman(num: i32) -> String {
+        let mut ans = String::new();
+
+        let num_of_thousand = num / 1000;
+        let num_of_thousand = vec!['M'; num_of_thousand as usize];
+        let sub: String = (num_of_thousand.into_iter().collect());
+        ans = ans.add(&sub);
+
+        let mut num_of_rest = num % 1000;
+        if num_of_rest >= 900 {
+            ans = ans.add("CM");
+            num_of_rest -= 900;
+        } else if num_of_rest >= 500 {
+            ans = ans.add("D");
+            let num_of_100 = vec!['C'; ((num_of_rest - 500) / 100) as usize];
+            let sub: String = num_of_100.into_iter().collect();
+            ans = ans.add(&sub);
+            num_of_rest = ((num_of_rest - 500) % 100);
+        } else if num_of_rest >= 400 {
+            ans = ans.add("CD");
+            num_of_rest -= 400;
+        } else {
+            let num_of_100 = vec!['C'; ((num_of_rest) / 100) as usize];
+            let sub: String = num_of_100.into_iter().collect();
+            ans = ans.add(&sub);
+            num_of_rest = ((num_of_rest) % 100);
+        }
+
+        if num_of_rest >= 90 {
+            ans = ans.add("XC");
+            num_of_rest -= 90;
+        } else if num_of_rest >= 50 {
+            ans = ans.add("L");
+            let num_of_10 = vec!['X'; ((num_of_rest - 50) / 10) as usize];
+            let sub: String = num_of_10.into_iter().collect();
+            ans = ans.add(&sub);
+            num_of_rest = ((num_of_rest - 50) % 10);
+        } else if num_of_rest >= 40 {
+            ans = ans.add("XL");
+            num_of_rest -= 40;
+        } else {
+            let num_of_10 = vec!['X'; ((num_of_rest ) / 10) as usize];
+            let sub: String = num_of_10.into_iter().collect();
+            ans = ans.add(&sub);
+            num_of_rest = ((num_of_rest) % 10);
+        }
+
+        if num_of_rest == 9 {
+            ans = ans.add("IX");
+            num_of_rest -= 9;
+        } else if num_of_rest >= 5 {
+            ans = ans.add("V");
+            // let num_of_1 = vec!['I'; ((num_of_rest - 5)) as usize];
+            // let sub: String = num_of_1.into_iter().collect();
+            // ans = ans.add(&sub);
+            num_of_rest = ((num_of_rest - 5));
+        } else if num_of_rest >= 4 {
+            ans = ans.add("IV");
+            num_of_rest -= 4;
+        }
+        let num_of_1 = vec!['I'; ((num_of_rest)) as usize];
+        let sub: String = num_of_1.into_iter().collect();
+        ans = ans.add(&sub);
 
 
-
+        ans
+    }
 }
