@@ -475,10 +475,12 @@ mod tests {
 
                     most_right = most_right.clone().as_ref().unwrap().borrow().right.clone();
                 }
+
                 {
                     let val = Rc::strong_count(cur.as_ref().unwrap());
                     // println!("{}", val);
                 }
+
                 let tmp_most_right = most_right.clone().as_ref().unwrap().borrow().right.clone();
 
                 match tmp_most_right {
@@ -571,5 +573,115 @@ mod tests {
 
 
         ans
+    }
+
+    #[test]
+    fn three_sum_test() {
+        // let test = three_sum(vec![-1,-2,1,2,0,3]);
+        let test = three_sum_double_pointer(vec![-1, -2, 1, 2, 0, 3]);
+        println!("{:?}", test);
+    }
+
+    /// 第三层使用二分法,时间复杂度O(n^2logn)
+    fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut result: Vec<Vec<i32>> = Vec::new();
+        if nums.len() >= 3 {
+            let mut nums = nums;
+            nums.sort();
+            'first: for fir in 0..nums.len() - 2 {
+                let mut ele: Vec<i32> = Vec::new();
+                if fir > 0 && nums[fir] == nums[fir - 1] {
+                    continue;
+                }
+                ele.push(nums[fir]);
+
+                'second: for sec in fir + 1..nums.len() - 1 {
+                    let mut ele = ele.clone();
+                    if sec > fir + 1 && nums[sec] == nums[sec - 1] {
+                        continue;
+                    }
+                    ele.push(nums[sec]);
+                    // 挨个查找
+                    // for thr in 2..nums.len() {
+                    //     if ele[0] + ele[1] + nums[thr] == 0 {
+                    //         ele.push(nums[thr]);
+                    //         break;
+                    //     }
+                    // }
+                    let mut left = sec + 1;
+                    let mut right = nums.len() - 1;
+                    let target = 0 - ele[0] - ele[1];
+                    if target < nums[left as usize] {
+                        continue 'first;
+                    }
+
+                    if target > nums[right as usize] {
+                        continue;
+                    }
+
+                    while left <= right {
+                        let mid = right - (right - left) / 2;
+                        if nums[mid as usize] == target {
+                            ele.push(target);
+                            result.push(ele);
+                            break;
+                        }
+                        if nums[mid as usize] < target {
+                            left = mid + 1;
+                        }
+                        if nums[mid as usize] > target {
+                            right = mid - 1;
+                        }
+                    }
+                }
+            }
+        }
+        result
+
+    }
+
+    /// 双指针加去重
+    fn three_sum_double_pointer(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut result: Vec<Vec<i32>> = Vec::new();
+        if nums.len() >= 3 {
+            let mut nums = nums;
+            let mut head = 0;
+            let mut body = 1;
+            let mut tail = nums.len() - 1;
+
+            nums.sort();
+            while head < nums.len() - 2 && body < nums.len() - 1 && nums[head] <= 0 {
+                while body < nums.len() - 1 && tail > body && nums[tail] >= 0{
+
+                    match nums[head] + nums[body] + nums[tail] {
+                        c if c > 0 => {
+                            tail -= 1;
+                        },
+                        c if c == 0 => {
+                            result.push(vec![nums[head], nums[body], nums[tail]]);
+                            loop {
+                                if body + 2 < nums.len() && nums[body + 1] == nums[body] {
+                                    body = body + 1;
+                                } else if tail -1 > body && nums[tail - 1] == nums[tail] {
+                                    tail -= 1;
+                                } else {
+                                    body += 1;
+                                    break;
+                                }
+
+                            }
+                        },
+                        _ => body += 1
+                    }
+                }
+                while head < nums.len() - 2 && nums[head + 1] == nums[head] {
+                   head += 1;
+                }
+                head += 1;
+                body = head + 1;
+                tail = nums.len() - 1;
+            }
+        }
+        result
     }
 }
