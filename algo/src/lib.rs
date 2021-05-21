@@ -684,4 +684,40 @@ mod tests {
         }
         result
     }
+
+    #[test]
+    fn generate_parenthesis_test() {
+        let a_a = generate_parenthesis(5);
+        println!("{:?}", a_a);
+    }
+
+    /// 括号生成
+    /// 递归回溯
+    /// 另一种方法：(a)b ,其中 a 与 b为符合条件的括号字符串且可为空
+    fn generate_parenthesis(n: i32) -> Vec<String> {
+        let mut result: Vec<String> = vec![];
+        generate_recursion(&mut result, &mut String::new(), 0, 0, n as usize);
+        fn generate_recursion(mut result: &mut Vec<String>, mut cur_str: &mut String, open: usize, close: usize, n: usize) {
+            if cur_str.len() == n * 2 {
+                result.push(cur_str.clone());
+                return;
+            }
+
+            if open < n {
+                cur_str.push('(');
+                generate_recursion(&mut result, &mut cur_str, open + 1, close, n);
+                cur_str.remove(cur_str.len() - 1);
+            }
+
+            if close < open {
+                cur_str.push(')');
+                generate_recursion(&mut result, &mut cur_str, open, close + 1, n);
+                cur_str.remove(cur_str.len() - 1);
+            }
+        }
+
+        result
+    }
+
+
 }
