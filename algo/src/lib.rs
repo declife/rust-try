@@ -693,7 +693,7 @@ mod tests {
 
     /// 括号生成
     /// 递归回溯
-    /// 另一种方法：(a)b ,其中 a 与 b为符合条件的括号字符串且可为空
+    /// 另一种方法：(a)b ,其中 a 与 b为符合条件的括号字符串且可为空且a为i(0~n-1)个合法括号,b为n - 1 - i个合法括号
     fn generate_parenthesis(n: i32) -> Vec<String> {
         let mut result: Vec<String> = vec![];
         generate_recursion(&mut result, &mut String::new(), 0, 0, n as usize);
@@ -719,5 +719,47 @@ mod tests {
         result
     }
 
+    #[test]
+    fn cal_test() {
+        let line = vec!["23".to_string(), "+".to_string(), "43".to_string(), "*".to_string(), "987".to_string(), "-".to_string(), "12".to_string()];
+        println!("{}", cal(line));
+    }
+
+    fn cal(line: Vec<String>) -> i32 {
+        let mut num: Vec<i32> = vec![];
+        // 只用一个string存储就可以,后续处理只取用了vec的最后一个值
+        let mut sign: Vec<String> = vec![];
+        let mut ans = 0;
+
+        for ele in line {
+            match  i32::from_str_radix(&ele, 10) {
+                Ok(number) => {
+                    if sign.ends_with(&["-".to_string()]) {
+                        num.push(-number);
+                    } else if sign.ends_with(&["*".to_string()]) {
+                        let pre = num.pop().unwrap();
+                        num.push( pre * number);
+                    } else if sign.ends_with(&["/".to_string()]) {
+                        let pre = num.pop().unwrap();
+                        num.push(pre / number);
+                    } else {
+                        num.push(number);
+                    }
+                },
+                Err(e) => {
+                    if ele != "+" || ele != "-" || ele != "*" || ele != "/" {
+                        panic!(e);
+                    }
+                    sign.push(ele)
+                }
+            }
+        }
+
+        for n in num {
+            ans += n;
+        }
+
+        ans
+    }
 
 }
