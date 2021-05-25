@@ -762,4 +762,46 @@ mod tests {
         ans
     }
 
+    #[test]
+    fn rotate_test() {
+        let mut matrix = vec![vec![1,2,3,4], vec![1,2,3,4],vec![1,2,3,4],vec![1,2,3,4]];
+        rotate_another(&mut matrix);
+        println!("{:#?}", matrix);
+    }
+
+    /// 矩阵旋转90度
+    fn rotate(matrix: &mut Vec<Vec<i32>>) {
+        let n = matrix.len();
+        //let naka = matrix[0].len();
+
+        for i in 0..n / 2 {
+            for j in  i..n -  i - 1 {
+                let tmp = matrix[i][j];
+                matrix[i][j] = matrix[n - j - 1][i];
+                matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1];
+                matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1];
+                matrix[j][n - i - 1] = tmp;
+            }
+        }
+    }
+
+    /// 矩阵旋转90度,另一种方法
+    fn rotate_another(matrix: &mut Vec<Vec<i32>>) {
+        let n = matrix.len();
+
+        // 先上下翻转再主对角线翻转 || 先次对角线翻转再上下翻转
+        for i in 0..(n / 2) {
+            matrix.swap(i, n - 1 - i);
+        }
+        for i in 0..n - 1 {
+            for j in i + 1..= n - 1 {
+                let (a, b) = (matrix[i][j], matrix[j][i]);
+                matrix[i][j] = b;
+                matrix[j][i] = a;
+            }
+        }
+
+
+    }
+
 }
